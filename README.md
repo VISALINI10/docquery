@@ -47,29 +47,40 @@ Documents (.txt/.pdf)
 - **Generation prompt**: explicitly instructed to say "not found in context"
   rather than answer from outside knowledge — this is what prevents silent
   hallucination when retrieval fails.
-
 ## Evaluation results
 
-Measured locally with a TF-IDF stand-in (no internet access to Hugging Face
-in the dev sandbox used to build this):
+Tested across three query categories designed to expose specific retrieval
+failure modes: exact-match (baseline sanity check), paraphrased (semantic vs.
+lexical matching), and out-of-scope (does the system know what it doesn't know).
 
-| Category | Recall@3 |
-|---|---|
-| Exact-match | 1.00 |
-| Paraphrased | 0.67 |
-| Out-of-scope correctly flagged | 0.00 |
+| Category | TF-IDF baseline | Real embeddings (all-MiniLM-L6-v2) |
+|---|---|---|
+| Exact-match Recall@3 | 1.00 | 1.00 |
+| Paraphrased Recall@3 | 0.67 | **1.00** |
+| Out-of-scope correctly flagged | 0.00 | **1.00** |
 
 **Finding**: TF-IDF (lexical matching) fails on paraphrased queries with no
-shared vocabulary, and its similarity scores don't have enough dynamic range
-to reliably separate relevant from irrelevant queries by threshold alone.
-This is the empirical case for using dense embeddings instead of keyword
-search, and it's also why production RAG systems typically add a dedicated
-groundedness/relevance check after retrieval rather than trusting a raw
-similarity score.
+shared vocabulary — e.g. "How might someone hide malicious commands inside a
+document a chatbot reads?" has almost no words in common with the source
+text's "prompt injection... redirect the model's behavior," so a keyword
+matcher has no signal to work with. Switching to dense sentence embeddings
+closed this gap entirely, because semantic similarity captures meaning rather
+than surface wordforms.
 
-`colab/DocQuery_Colab.ipynb` reruns the identical evaluation using the real
-`all-MiniLM-L6-v2` embeddings (requires internet access) — run it and compare
-the numbers to see whether semantic embeddings close these gaps.
+TF-IDF's out-of-scope detection also failed completely (0.00) because its
+similarity scores don't have enough dynamic range to separate "irrelevant"
+from "vaguely related" by a fixed threshold. Real embeddings gave a much
+cleaner score separation (irrelevant queries scored 0.07–0.12, relevant
+queries scored 0.44–0.69), which is what let a simple threshold work here.
+
+**Caveat**: each category was tested with only 3 queries. A perfect score on
+9 total queries demonstrates the evaluation methodology and the lexical-vs-
+semantic gap clearly, but is too small a sample to claim strong generalization
+— a natural next step is expanding each category with harder, more borderline
+examples to find where the system actually starts to fail.
+
+`colab/DocQuery_Colab.ipynb` contains this full run with real sentence-transformer
+embeddings, including the exact query-by-query output.
 
 ## Running it
 
