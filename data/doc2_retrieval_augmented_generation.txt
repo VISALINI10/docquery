@@ -1,0 +1,25 @@
+Retrieval-Augmented Generation
+
+Retrieval-Augmented Generation, or RAG, combines a retrieval step with a generative language
+model to ground the model's output in an external knowledge source rather than relying solely
+on what was memorized during pretraining. A typical RAG pipeline has three stages: chunking
+and embedding a document collection, retrieving the most relevant chunks for a given query,
+and passing those chunks alongside the query into a language model to produce an answer.
+
+Chunking strategy matters more than it first appears. Splitting documents into fixed-size
+windows is simple but can cut sentences or ideas in half, hurting retrieval quality. Overlapping
+windows, where consecutive chunks share a portion of their content, reduce the chance that a
+relevant answer is split across a chunk boundary, at the cost of a larger and more redundant
+index.
+
+Dense retrieval represents each chunk as a vector using an embedding model, typically a
+sentence-transformer trained so that semantically similar text produces vectors that are close
+together under cosine similarity or inner product. At query time, the query is embedded with
+the same model and compared against every chunk vector using an approximate or exact
+nearest-neighbor search structure such as FAISS.
+
+A common failure mode in RAG systems is retrieving chunks that are lexically similar to the
+query but not actually relevant to answering it, or missing chunks that use different wording
+for the same concept. This is why retrieval quality should be evaluated directly, independent
+of the generation step, using a labeled set of query-to-relevant-chunk pairs rather than judging
+the system only by whether the final generated answer looks reasonable.

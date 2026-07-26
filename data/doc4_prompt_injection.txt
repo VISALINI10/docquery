@@ -1,0 +1,22 @@
+Prompt Injection in Retrieval-Augmented Systems
+
+When a language model's context window includes text retrieved from an external source, that
+retrieved text can contain instructions rather than just information. Prompt injection occurs
+when a malicious or unexpected document contains language crafted to redirect the model's
+behavior, for example instructing it to ignore its original task or reveal system-level
+instructions. This is a distinct risk from adversarial perturbations on model inputs, because
+the attack is expressed in natural language rather than in pixel or token-level noise.
+
+RAG systems are particularly exposed to this risk because retrieved documents are, by design,
+inserted into the model's context alongside the user's query, often without the same scrutiny
+applied to the query itself. A document scraped from an untrusted source, uploaded by another
+user, or pulled from the open web can carry embedded instructions that the retrieval step has
+no way of filtering out, since retrieval is optimized for topical relevance, not for safety.
+
+Mitigations include clearly delimiting retrieved content from instructions in the prompt
+template, training or prompting the model to treat retrieved text as data rather than as
+commands, and running a separate classifier over retrieved chunks to flag suspicious
+instruction-like content before it reaches the generation step. None of these mitigations are
+complete on their own, which is why evaluation harnesses for RAG systems increasingly include
+adversarially constructed documents designed specifically to test whether injected instructions
+are followed.

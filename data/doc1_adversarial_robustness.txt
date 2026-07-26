@@ -1,0 +1,24 @@
+Adversarial Robustness in Neural Networks
+
+Neural networks trained on clean data can be highly sensitive to small, deliberately crafted
+input perturbations. These perturbations, often invisible to a human observer, can cause a
+model to misclassify an input with high confidence. The Fast Gradient Sign Method (FGSM)
+generates such perturbations in a single step by moving each input pixel a small amount in
+the direction of the gradient of the loss with respect to the input. This produces an adversarial
+example cheaply, but the resulting perturbation is relatively weak compared to iterative methods.
+
+Projected Gradient Descent (PGD) extends this idea by taking multiple smaller gradient steps
+and projecting the result back into an allowed perturbation budget after each step. Because it
+searches the local loss landscape more thoroughly than FGSM, PGD is considered a much
+stronger attack and is commonly used as a benchmark for adversarial training.
+
+Adversarial training incorporates these attacks directly into the training loop: at each step,
+the model is trained not on the clean input but on an adversarially perturbed version of it.
+This tends to improve robustness at some cost to clean accuracy, and the size of that tradeoff
+depends heavily on the perturbation budget used during training and the capacity of the model.
+
+Evaluating robustness only on clean validation data therefore gives an incomplete picture of
+model reliability. A model can score well on held-out clean examples while still being
+brittle to small, structured input changes that would never appear in curated benchmark sets
+but frequently appear in real deployment environments, such as noisy scans, compressed
+images, or adversarially motivated inputs from fraud actors.

@@ -1,0 +1,22 @@
+Evaluating Models Beyond Clean Benchmarks
+
+A model's accuracy on a held-out validation set answers a narrower question than it appears to:
+it tells you how the model performs on data drawn from the same distribution and curation
+process as the training set, not how it performs on the inputs it will actually see in
+production. Real deployment traffic tends to differ from benchmark data in ways that are easy
+to overlook, including compression artifacts, unusual formatting, partially corrupted inputs,
+and inputs crafted by users who are actively trying to find the model's failure modes.
+
+Building an evaluation harness that goes beyond clean benchmarks typically involves constructing
+or collecting examples along specific axes of difficulty rather than sampling more of the same
+distribution. For a document understanding system this might mean testing against scanned
+documents with poor image quality, documents in unexpected layouts, or documents containing
+adversarially placed text. For a retrieval system it might mean testing queries phrased very
+differently from the wording used in the source documents.
+
+Failure analysis is most useful when it produces a specific, falsifiable hypothesis about why
+the model failed, which can then be tested with a targeted experiment. A vague observation such
+as "the model struggles with hard cases" is not actionable; a hypothesis such as "the model's
+retrieval step fails when the query uses a synonym not present in any chunk" can be tested
+directly by constructing synonym-shifted queries and measuring retrieval recall specifically on
+that subset.

@@ -1,0 +1,11 @@
+The Transformer architecture was introduced in the 2017 paper "Attention Is All You Need." Unlike earlier sequence models such as RNNs and LSTMs, transformers process all tokens in a sequence in parallel rather than one at a time. This parallelism is what makes transformers so much faster to train on modern GPU and TPU hardware.
+
+The core mechanism inside a transformer is self-attention. Self-attention allows every token in a sequence to look at every other token and decide how much attention to pay to it when building its own representation. Each token produces three vectors: a query, a key, and a value. The attention score between two tokens is computed by taking the dot product of one token's query vector with another token's key vector, then scaling and passing through a softmax function.
+
+Transformers typically stack multiple layers of self-attention and feed-forward networks. Each layer also includes residual connections and layer normalization, which help gradients flow during training and make very deep networks trainable.
+
+Positional encoding is added to the input embeddings because self-attention itself has no inherent notion of token order. Without positional encoding, a transformer would treat a sentence as an unordered bag of tokens.
+
+Large language models like GPT and Llama are decoder-only transformers, meaning they only use the decoder half of the original transformer architecture, with a causal masking scheme so that each token can only attend to earlier tokens in the sequence. This causal masking is what allows these models to generate text one token at a time during inference.
+
+Vision Transformers, or ViTs, apply the same self-attention mechanism to images by splitting an image into fixed-size patches, flattening each patch, and treating the sequence of patches the same way a language transformer treats a sequence of word tokens.

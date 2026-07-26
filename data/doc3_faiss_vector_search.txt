@@ -1,0 +1,23 @@
+Vector Search with FAISS
+
+FAISS is a library for efficient similarity search over dense vectors. At small to medium scale,
+an exact search index such as IndexFlatL2 or IndexFlatIP simply compares a query vector against
+every stored vector and returns the closest matches, guaranteeing exact nearest neighbors at the
+cost of scanning the entire index for every query. This is usually fine for collections of a few
+hundred thousand vectors or fewer.
+
+At larger scale, exact search becomes too slow, and approximate methods trade a small amount
+of accuracy for large speed gains. IVF (inverted file) indexes partition the vector space into
+clusters using k-means, and at query time only a subset of clusters closest to the query are
+searched, rather than the entire collection. HNSW (hierarchical navigable small world) indexes
+build a graph structure that allows a query to navigate toward its nearest neighbors without
+visiting most of the index.
+
+Choosing between inner product and L2 distance depends on whether the embeddings are
+normalized. If vectors are normalized to unit length, ranking by inner product is equivalent to
+ranking by cosine similarity, and is often preferred for text embeddings because it focuses on
+the direction of the vector rather than its magnitude.
+
+Index quality should be validated the same way any retrieval system is validated: by measuring
+whether known relevant items are actually returned in the top-k results for representative
+queries, not by inspecting the index structure alone.

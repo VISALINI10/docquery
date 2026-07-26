@@ -1,0 +1,230 @@
+[
+  {
+    "doc_id": "doc1_adversarial_robustness",
+    "chunk_id": 0,
+    "text": "Adversarial Robustness in Neural Networks Neural networks trained on clean data can be highly sensitive to small, deliberately crafted input perturbations. These perturbations, often invisible to a human observer, can cause a model to misclassify an input with high confidence. The Fast Gradient Sign Method (FGSM) generates such perturbations in a single step by moving each input pixel a small amount in the direction of the gradient of the loss with respect to the input.",
+    "source_path": "/home/claude/docquery/data/doc1_adversarial_robustness.txt"
+  },
+  {
+    "doc_id": "doc1_adversarial_robustness",
+    "chunk_id": 1,
+    "text": "h input pixel a small amount in the direction of the gradient of the loss with respect to the input. This produces an adversarial example cheaply, but the resulting perturbation is relatively weak compared to iterative methods. Projected Gradient Descent (PGD) extends this idea by taking multiple smaller gradient steps and projecting the result back into an allowed perturbation budget after each step.",
+    "source_path": "/home/claude/docquery/data/doc1_adversarial_robustness.txt"
+  },
+  {
+    "doc_id": "doc1_adversarial_robustness",
+    "chunk_id": 2,
+    "text": "r gradient steps and projecting the result back into an allowed perturbation budget after each step. Because it searches the local loss landscape more thoroughly than FGSM, PGD is considered a much stronger attack and is commonly used as a benchmark for adversarial training. Adversarial training incorporates these attacks directly into the training loop: at each step, the model is trained not on the clean input but on an adversarially perturbed version of it.",
+    "source_path": "/home/claude/docquery/data/doc1_adversarial_robustness.txt"
+  },
+  {
+    "doc_id": "doc1_adversarial_robustness",
+    "chunk_id": 3,
+    "text": "h step, the model is trained not on the clean input but on an adversarially perturbed version of it. This tends to improve robustness at some cost to clean accuracy, and the size of that tradeoff depends heavily on the perturbation budget used during training and the capacity of the model. Evaluating robustness only on clean validation data therefore gives an incomplete picture of model reliability.",
+    "source_path": "/home/claude/docquery/data/doc1_adversarial_robustness.txt"
+  },
+  {
+    "doc_id": "doc1_adversarial_robustness",
+    "chunk_id": 4,
+    "text": "robustness only on clean validation data therefore gives an incomplete picture of model reliability. A model can score well on held-out clean examples while still being brittle to small, structured input changes that would never appear in curated benchmark sets but frequently appear in real deployment environments, such as noisy scans, compressed images, or adversarially motivated inputs from fraud actors.",
+    "source_path": "/home/claude/docquery/data/doc1_adversarial_robustness.txt"
+  },
+  {
+    "doc_id": "doc2_retrieval_augmented_generation",
+    "chunk_id": 0,
+    "text": "Retrieval-Augmented Generation Retrieval-Augmented Generation, or RAG, combines a retrieval step with a generative language model to ground the model's output in an external knowledge source rather than relying solely on what was memorized during pretraining. A typical RAG pipeline has three stages: chunking and embedding a document collection, retrieving the most relevant chunks for a given query, and passing those chunks alongside the query into a language model to produce an answer.",
+    "source_path": "/home/claude/docquery/data/doc2_retrieval_augmented_generation.txt"
+  },
+  {
+    "doc_id": "doc2_retrieval_augmented_generation",
+    "chunk_id": 1,
+    "text": "iven query, and passing those chunks alongside the query into a language model to produce an answer. Chunking strategy matters more than it first appears. Splitting documents into fixed-size windows is simple but can cut sentences or ideas in half, hurting retrieval quality. Overlapping windows, where consecutive chunks share a portion of their content, reduce the chance that a relevant answer is split across a chunk boundary, at the cost of a larger and more redundant index.",
+    "source_path": "/home/claude/docquery/data/doc2_retrieval_augmented_generation.txt"
+  },
+  {
+    "doc_id": "doc2_retrieval_augmented_generation",
+    "chunk_id": 2,
+    "text": "relevant answer is split across a chunk boundary, at the cost of a larger and more redundant index. Dense retrieval represents each chunk as a vector using an embedding model, typically a sentence-transformer trained so that semantically similar text produces vectors that are close together under cosine similarity or inner product.",
+    "source_path": "/home/claude/docquery/data/doc2_retrieval_augmented_generation.txt"
+  },
+  {
+    "doc_id": "doc2_retrieval_augmented_generation",
+    "chunk_id": 3,
+    "text": "ally similar text produces vectors that are close together under cosine similarity or inner product. At query time, the query is embedded with the same model and compared against every chunk vector using an approximate or exact nearest-neighbor search structure such as FAISS. A common failure mode in RAG systems is retrieving chunks that are lexically similar to the query but not actually relevant to answering it, or missing chunks that use different wording for the same concept.",
+    "source_path": "/home/claude/docquery/data/doc2_retrieval_augmented_generation.txt"
+  },
+  {
+    "doc_id": "doc2_retrieval_augmented_generation",
+    "chunk_id": 4,
+    "text": "ctually relevant to answering it, or missing chunks that use different wording for the same concept. This is why retrieval quality should be evaluated directly, independent of the generation step, using a labeled set of query-to-relevant-chunk pairs rather than judging the system only by whether the final generated answer looks reasonable.",
+    "source_path": "/home/claude/docquery/data/doc2_retrieval_augmented_generation.txt"
+  },
+  {
+    "doc_id": "doc3_faiss_vector_search",
+    "chunk_id": 0,
+    "text": "Vector Search with FAISS FAISS is a library for efficient similarity search over dense vectors. At small to medium scale, an exact search index such as IndexFlatL2 or IndexFlatIP simply compares a query vector against every stored vector and returns the closest matches, guaranteeing exact nearest neighbors at the cost of scanning the entire index for every query. This is usually fine for collections of a few hundred thousand vectors or fewer.",
+    "source_path": "/home/claude/docquery/data/doc3_faiss_vector_search.txt"
+  },
+  {
+    "doc_id": "doc3_faiss_vector_search",
+    "chunk_id": 1,
+    "text": "ex for every query. This is usually fine for collections of a few hundred thousand vectors or fewer. At larger scale, exact search becomes too slow, and approximate methods trade a small amount of accuracy for large speed gains. IVF (inverted file) indexes partition the vector space into clusters using k-means, and at query time only a subset of clusters closest to the query are searched, rather than the entire collection.",
+    "source_path": "/home/claude/docquery/data/doc3_faiss_vector_search.txt"
+  },
+  {
+    "doc_id": "doc3_faiss_vector_search",
+    "chunk_id": 2,
+    "text": "time only a subset of clusters closest to the query are searched, rather than the entire collection. HNSW (hierarchical navigable small world) indexes build a graph structure that allows a query to navigate toward its nearest neighbors without visiting most of the index. Choosing between inner product and L2 distance depends on whether the embeddings are normalized.",
+    "source_path": "/home/claude/docquery/data/doc3_faiss_vector_search.txt"
+  },
+  {
+    "doc_id": "doc3_faiss_vector_search",
+    "chunk_id": 3,
+    "text": "ex. Choosing between inner product and L2 distance depends on whether the embeddings are normalized. If vectors are normalized to unit length, ranking by inner product is equivalent to ranking by cosine similarity, and is often preferred for text embeddings because it focuses on the direction of the vector rather than its magnitude.",
+    "source_path": "/home/claude/docquery/data/doc3_faiss_vector_search.txt"
+  },
+  {
+    "doc_id": "doc3_faiss_vector_search",
+    "chunk_id": 4,
+    "text": "red for text embeddings because it focuses on the direction of the vector rather than its magnitude. Index quality should be validated the same way any retrieval system is validated: by measuring whether known relevant items are actually returned in the top-k results for representative queries, not by inspecting the index structure alone.",
+    "source_path": "/home/claude/docquery/data/doc3_faiss_vector_search.txt"
+  },
+  {
+    "doc_id": "doc4_prompt_injection",
+    "chunk_id": 0,
+    "text": "Prompt Injection in Retrieval-Augmented Systems When a language model's context window includes text retrieved from an external source, that retrieved text can contain instructions rather than just information. Prompt injection occurs when a malicious or unexpected document contains language crafted to redirect the model's behavior, for example instructing it to ignore its original task or reveal system-level instructions.",
+    "source_path": "/home/claude/docquery/data/doc4_prompt_injection.txt"
+  },
+  {
+    "doc_id": "doc4_prompt_injection",
+    "chunk_id": 1,
+    "text": "ehavior, for example instructing it to ignore its original task or reveal system-level instructions. This is a distinct risk from adversarial perturbations on model inputs, because the attack is expressed in natural language rather than in pixel or token-level noise. RAG systems are particularly exposed to this risk because retrieved documents are, by design, inserted into the model's context alongside the user's query, often without the same scrutiny applied to the query itself.",
+    "source_path": "/home/claude/docquery/data/doc4_prompt_injection.txt"
+  },
+  {
+    "doc_id": "doc4_prompt_injection",
+    "chunk_id": 2,
+    "text": "l's context alongside the user's query, often without the same scrutiny applied to the query itself. A document scraped from an untrusted source, uploaded by another user, or pulled from the open web can carry embedded instructions that the retrieval step has no way of filtering out, since retrieval is optimized for topical relevance, not for safety.",
+    "source_path": "/home/claude/docquery/data/doc4_prompt_injection.txt"
+  },
+  {
+    "doc_id": "doc4_prompt_injection",
+    "chunk_id": 3,
+    "text": "tep has no way of filtering out, since retrieval is optimized for topical relevance, not for safety. Mitigations include clearly delimiting retrieved content from instructions in the prompt template, training or prompting the model to treat retrieved text as data rather than as commands, and running a separate classifier over retrieved chunks to flag suspicious instruction-like content before it reaches the generation step.",
+    "source_path": "/home/claude/docquery/data/doc4_prompt_injection.txt"
+  },
+  {
+    "doc_id": "doc4_prompt_injection",
+    "chunk_id": 4,
+    "text": "retrieved chunks to flag suspicious instruction-like content before it reaches the generation step. None of these mitigations are complete on their own, which is why evaluation harnesses for RAG systems increasingly include adversarially constructed documents designed specifically to test whether injected instructions are followed.",
+    "source_path": "/home/claude/docquery/data/doc4_prompt_injection.txt"
+  },
+  {
+    "doc_id": "doc5_evaluation_beyond_benchmarks",
+    "chunk_id": 0,
+    "text": "Evaluating Models Beyond Clean Benchmarks A model's accuracy on a held-out validation set answers a narrower question than it appears to: it tells you how the model performs on data drawn from the same distribution and curation process as the training set, not how it performs on the inputs it will actually see in production.",
+    "source_path": "/home/claude/docquery/data/doc5_evaluation_beyond_benchmarks.txt"
+  },
+  {
+    "doc_id": "doc5_evaluation_beyond_benchmarks",
+    "chunk_id": 1,
+    "text": "n process as the training set, not how it performs on the inputs it will actually see in production. Real deployment traffic tends to differ from benchmark data in ways that are easy to overlook, including compression artifacts, unusual formatting, partially corrupted inputs, and inputs crafted by users who are actively trying to find the model's failure modes.",
+    "source_path": "/home/claude/docquery/data/doc5_evaluation_beyond_benchmarks.txt"
+  },
+  {
+    "doc_id": "doc5_evaluation_beyond_benchmarks",
+    "chunk_id": 2,
+    "text": "upted inputs, and inputs crafted by users who are actively trying to find the model's failure modes. Building an evaluation harness that goes beyond clean benchmarks typically involves constructing or collecting examples along specific axes of difficulty rather than sampling more of the same distribution.",
+    "source_path": "/home/claude/docquery/data/doc5_evaluation_beyond_benchmarks.txt"
+  },
+  {
+    "doc_id": "doc5_evaluation_beyond_benchmarks",
+    "chunk_id": 3,
+    "text": "cting examples along specific axes of difficulty rather than sampling more of the same distribution. For a document understanding system this might mean testing against scanned documents with poor image quality, documents in unexpected layouts, or documents containing adversarially placed text. For a retrieval system it might mean testing queries phrased very differently from the wording used in the source documents.",
+    "source_path": "/home/claude/docquery/data/doc5_evaluation_beyond_benchmarks.txt"
+  },
+  {
+    "doc_id": "doc5_evaluation_beyond_benchmarks",
+    "chunk_id": 4,
+    "text": "t might mean testing queries phrased very differently from the wording used in the source documents. Failure analysis is most useful when it produces a specific, falsifiable hypothesis about why the model failed, which can then be tested with a targeted experiment.",
+    "source_path": "/home/claude/docquery/data/doc5_evaluation_beyond_benchmarks.txt"
+  },
+  {
+    "doc_id": "doc5_evaluation_beyond_benchmarks",
+    "chunk_id": 5,
+    "text": "sifiable hypothesis about why the model failed, which can then be tested with a targeted experiment. A vague observation such as \"the model struggles with hard cases\" is not actionable; a hypothesis such as \"the model's retrieval step fails when the query uses a synonym not present in any chunk\" can be tested directly by constructing synonym-shifted queries and measuring retrieval recall specifically on that subset.",
+    "source_path": "/home/claude/docquery/data/doc5_evaluation_beyond_benchmarks.txt"
+  },
+  {
+    "doc_id": "rag_systems",
+    "chunk_id": 0,
+    "text": "Retrieval-Augmented Generation, or RAG, combines a retrieval system with a text generation model to answer questions using external documents rather than relying solely on knowledge stored in the model's parameters. This is useful because language models have a fixed knowledge cutoff and cannot cite sources for facts they generate from memory alone. A typical RAG pipeline has three stages.",
+    "source_path": "/home/claude/docquery/data/rag_systems.txt"
+  },
+  {
+    "doc_id": "rag_systems",
+    "chunk_id": 1,
+    "text": "not cite sources for facts they generate from memory alone. A typical RAG pipeline has three stages. First, documents are split into chunks and converted into dense vector embeddings using a sentence embedding model. Second, at query time, the user's question is embedded using the same model, and a similarity search is run against the stored document embeddings to find the most relevant chunks.",
+    "source_path": "/home/claude/docquery/data/rag_systems.txt"
+  },
+  {
+    "doc_id": "rag_systems",
+    "chunk_id": 2,
+    "text": "a similarity search is run against the stored document embeddings to find the most relevant chunks. Third, the retrieved chunks are inserted into the generation model's prompt as context, and the model produces an answer grounded in that retrieved text. FAISS, developed by Meta, is one of the most widely used libraries for the similarity search step.",
+    "source_path": "/home/claude/docquery/data/rag_systems.txt"
+  },
+  {
+    "doc_id": "rag_systems",
+    "chunk_id": 3,
+    "text": ". FAISS, developed by Meta, is one of the most widely used libraries for the similarity search step. It supports several index types, including flat indexes that compute exact nearest neighbors and approximate indexes such as IVF and HNSW that trade a small amount of accuracy for much faster search on large datasets. One common failure mode in RAG systems is retrieving chunks that are semantically similar to the query but do not actually contain the answer.",
+    "source_path": "/home/claude/docquery/data/rag_systems.txt"
+  },
+  {
+    "doc_id": "rag_systems",
+    "chunk_id": 4,
+    "text": "retrieving chunks that are semantically similar to the query but do not actually contain the answer. This can happen when a query is ambiguous, when a document uses different terminology than the query, or when a chunk boundary splits an answer away from the sentence that provides necessary context. Good RAG evaluation should specifically test these failure cases rather than only measuring performance on clean, well-matched queries.",
+    "source_path": "/home/claude/docquery/data/rag_systems.txt"
+  },
+  {
+    "doc_id": "rag_systems",
+    "chunk_id": 5,
+    "text": "ally test these failure cases rather than only measuring performance on clean, well-matched queries. Reranking is a technique used to improve retrieval quality after the initial similarity search. A reranker model, often a cross-encoder, takes each retrieved chunk together with the original query and produces a more precise relevance score than the original embedding similarity alone, at the cost of additional compute per query.",
+    "source_path": "/home/claude/docquery/data/rag_systems.txt"
+  },
+  {
+    "doc_id": "transformers_overview",
+    "chunk_id": 0,
+    "text": "The Transformer architecture was introduced in the 2017 paper \"Attention Is All You Need.\" Unlike earlier sequence models such as RNNs and LSTMs, transformers process all tokens in a sequence in parallel rather than one at a time. This parallelism is what makes transformers so much faster to train on modern GPU and TPU hardware. The core mechanism inside a transformer is self-attention.",
+    "source_path": "/home/claude/docquery/data/transformers_overview.txt"
+  },
+  {
+    "doc_id": "transformers_overview",
+    "chunk_id": 1,
+    "text": "to train on modern GPU and TPU hardware. The core mechanism inside a transformer is self-attention. Self-attention allows every token in a sequence to look at every other token and decide how much attention to pay to it when building its own representation. Each token produces three vectors: a query, a key, and a value.",
+    "source_path": "/home/claude/docquery/data/transformers_overview.txt"
+  },
+  {
+    "doc_id": "transformers_overview",
+    "chunk_id": 2,
+    "text": "hen building its own representation. Each token produces three vectors: a query, a key, and a value. The attention score between two tokens is computed by taking the dot product of one token's query vector with another token's key vector, then scaling and passing through a softmax function. Transformers typically stack multiple layers of self-attention and feed-forward networks.",
+    "source_path": "/home/claude/docquery/data/transformers_overview.txt"
+  },
+  {
+    "doc_id": "transformers_overview",
+    "chunk_id": 3,
+    "text": "function. Transformers typically stack multiple layers of self-attention and feed-forward networks. Each layer also includes residual connections and layer normalization, which help gradients flow during training and make very deep networks trainable. Positional encoding is added to the input embeddings because self-attention itself has no inherent notion of token order. Without positional encoding, a transformer would treat a sentence as an unordered bag of tokens.",
+    "source_path": "/home/claude/docquery/data/transformers_overview.txt"
+  },
+  {
+    "doc_id": "transformers_overview",
+    "chunk_id": 4,
+    "text": "er. Without positional encoding, a transformer would treat a sentence as an unordered bag of tokens. Large language models like GPT and Llama are decoder-only transformers, meaning they only use the decoder half of the original transformer architecture, with a causal masking scheme so that each token can only attend to earlier tokens in the sequence. This causal masking is what allows these models to generate text one token at a time during inference.",
+    "source_path": "/home/claude/docquery/data/transformers_overview.txt"
+  },
+  {
+    "doc_id": "transformers_overview",
+    "chunk_id": 5,
+    "text": "is causal masking is what allows these models to generate text one token at a time during inference. Vision Transformers, or ViTs, apply the same self-attention mechanism to images by splitting an image into fixed-size patches, flattening each patch, and treating the sequence of patches the same way a language transformer treats a sequence of word tokens.",
+    "source_path": "/home/claude/docquery/data/transformers_overview.txt"
+  }
+]
